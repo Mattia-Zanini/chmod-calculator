@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/mattz/Documents/GitHub/chmod-calculator",
+      "program": "/Users/mattz/Documents/GitHub/chmod-calculator/build/Debug/outDebug"
+    }
+  ]
+}
