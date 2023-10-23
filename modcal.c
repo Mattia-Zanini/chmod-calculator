@@ -22,16 +22,16 @@ int main(int argc, char *argv[])
     // EXECUTE 2^0   1     1      1
     // chmod = 755
 
-    // check if there is the first argument otherwhise the program won't start
+    // Verifica se è stato fornito un argomento iniziale, altrimenti il programma non parte
     if (argc < 2)
     {
         printf("Error: Missing argument\n");
         exit(1);
     }
 
-    // check if the argument isn't too long
-    // string form: rwxr-xr-x length = 9 chars
-    // numeric form: 755 length = 3 chars
+    // Verifica se l'argomento è troppo lungo
+    // La forma in stringa: rwxr-xr-x ha una lunghezza di 9 caratteri
+    // La forma numerica: 755 ha una lunghezza di 3 caratteri
     if (strlen(argv[1]) > 9)
     {
         printf("Error: Argument too long\n");
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     char onlyLetters = TRUE;
     char onlyNumbers = TRUE;
 
-    // Understand if the user typed the chmod setting in string form
+    // Verifica se l'utente ha inserito i permessi di chmod in forma di stringa
     for (int i = 0; i < strlen(argv[1]); i++)
     {
         if (isalpha(argv[1][i]) == FALSE && argv[1][i] != '-')
@@ -53,10 +53,10 @@ int main(int argc, char *argv[])
 
     if (onlyLetters == FALSE && strlen(argv[1]) < 4)
     {
-        // Understand if the user typed the chmod setting in numeric form
+        // Verifica se l'utente ha inserito i permessi di chmod in forma numerica
         for (int i = 0; i < strlen(argv[1]); i++)
         {
-            if (isnumber(argv[1][i]) == FALSE)
+            if (isdigit(argv[1][i]) == FALSE)
             {
                 onlyNumbers = FALSE;
                 break;
@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    // Chiamata alle funzioni appropriate in base alla forma di input dell'utente
     if (onlyLetters == TRUE)
         chmodStringToNumber(argv[1]);
     else
@@ -88,6 +89,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+// Converte i permessi di chmod in forma di stringa in un numero intero
 int strToNum(char *permissions)
 {
     int total = 0;
@@ -108,6 +110,7 @@ int strToNum(char *permissions)
     return total;
 }
 
+// Converte un numero di chmod in una stringa di permessi di chmod
 char *numToStr(char *binary)
 {
     char *result = malloc(4);
@@ -135,6 +138,7 @@ char *numToStr(char *binary)
     return result;
 }
 
+// Converte i permessi di chmod in forma di stringa in un numero intero
 int chmodStringToNumber(char *value)
 {
     char owner[4];
@@ -156,34 +160,19 @@ int chmodStringToNumber(char *value)
 
     return 0;
 }
+
+// Converte un numero di chmod in una stringa di permessi di chmod
 int chmodNumberToString(char *value)
 {
-    // printf("forma numerica: %s\n", value);
     char owner = value[0];
     char group = value[1];
     char everyone = value[2];
-
-    /*
-    printf("Owner: %c\n", owner);
-    printf("Group: %c\n", group);
-    printf("Everyone: %c\n", everyone);
-    printf("Valore di owner: %s\n", intToBinary3Bits(owner - '0'));
-    printf("Valore di group: %s\n", intToBinary3Bits(group - '0'));
-    printf("Valore di everyone: %s\n", intToBinary3Bits(everyone - '0'));
-    */
 
     char *stringOwner = intToBinary3Bits(owner - '0');
     char *stringGroup = intToBinary3Bits(group - '0');
     char *stringEveryone = intToBinary3Bits(everyone - '0');
 
-    // 755 = 111 101 101
-    /*
-    printf("Owner in string: %s\n", numToStr(stringOwner));
-    printf("Group in string: %s\n", numToStr(stringGroup));
-    printf("Everyone in string: %s\n", numToStr(stringEveryone));
-    */
-
-    char *result = malloc(9);
+    char *result = malloc(10); // 9 (rwxr-xr-x) + 1 (terminatore nullo)
     sprintf(result, "%s%s%s",
             numToStr(stringOwner), numToStr(stringGroup), numToStr(stringEveryone));
 
@@ -193,6 +182,7 @@ int chmodNumberToString(char *value)
     return 0;
 }
 
+// Converte un numero in un numero binario a 3 bit
 char *intToBinary3Bits(int num)
 {
     if (num < 0 || num > 7)
@@ -211,10 +201,10 @@ char *intToBinary3Bits(int num)
 
     for (int i = 2; i >= 0; i--)
     {
-        binaryString[i] = (num & 1) + '0'; // Convert the least significant bit to a character
-        num >>= 1;                         // Right-shift to process the next bit
+        binaryString[i] = (num & 1) + '0'; // Converte il bit meno significativo in un carattere
+        num >>= 1;                         // Shift a destra per elaborare il bit successivo
     }
 
-    binaryString[3] = '\0'; // Null-terminate the string
+    binaryString[3] = '\0'; // Termina la stringa con il terminatore nullo
     return binaryString;
 }
