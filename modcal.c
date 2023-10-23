@@ -10,7 +10,7 @@
 int strToNum(char *permissions);
 int chmodStringToNumber(char *value);
 int chmodNumberToString(char *value);
-char *decimalToBinary(int num);
+char *intToBinary3Bits(int num);
 char *numToStr(char *binary);
 
 int main(int argc, char *argv[])
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     // check if there is the first argument otherwhise the program won't start
     if (argc < 2)
     {
-        printf("Missing argument\n");
+        printf("Error: Missing argument\n");
         exit(1);
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     // numeric form: 755 length = 3 chars
     if (strlen(argv[1]) > 9)
     {
-        printf("Argument too long\n");
+        printf("Error: Argument too long\n");
         exit(1);
     }
 
@@ -65,18 +65,18 @@ int main(int argc, char *argv[])
     }
     else if (onlyLetters == FALSE && strlen(argv[1]) > 3)
     {
-        printf("Argument too long for the numeric form\n");
+        printf("Error: Argument too long for the numeric form\n");
         exit(1);
     }
 
     if (onlyLetters == FALSE && onlyNumbers == FALSE)
     {
-        printf("Argument invalid\n");
+        printf("Error: Argument invalid\n");
         exit(1);
     }
     if (onlyLetters == TRUE && strlen(argv[1]) < 9)
     {
-        printf("Argument invalid in string form\n");
+        printf("Error: Argument invalid in string form\n");
         exit(1);
     }
 
@@ -167,14 +167,14 @@ int chmodNumberToString(char *value)
     printf("Owner: %c\n", owner);
     printf("Group: %c\n", group);
     printf("Everyone: %c\n", everyone);
-    printf("Valore di owner: %s\n", decimalToBinary(owner - '0'));
-    printf("Valore di group: %s\n", decimalToBinary(group - '0'));
-    printf("Valore di everyone: %s\n", decimalToBinary(everyone - '0'));
+    printf("Valore di owner: %s\n", intToBinary3Bits(owner - '0'));
+    printf("Valore di group: %s\n", intToBinary3Bits(group - '0'));
+    printf("Valore di everyone: %s\n", intToBinary3Bits(everyone - '0'));
     */
 
-    char *stringOwner = decimalToBinary(owner - '0');
-    char *stringGroup = decimalToBinary(group - '0');
-    char *stringEveryone = decimalToBinary(everyone - '0');
+    char *stringOwner = intToBinary3Bits(owner - '0');
+    char *stringGroup = intToBinary3Bits(group - '0');
+    char *stringEveryone = intToBinary3Bits(everyone - '0');
 
     // 755 = 111 101 101
     /*
@@ -193,29 +193,28 @@ int chmodNumberToString(char *value)
     return 0;
 }
 
-char *decimalToBinary(int num)
+char *intToBinary3Bits(int num)
 {
-    // Stores binary representation of number.
-    int binaryNum[3]; // Assuming 3 bit integer.
-    int i = 0;
-
-    for (; num > 0;)
+    if (num < 0 || num > 7)
     {
-        binaryNum[i++] = num % 2;
-        num /= 2;
+        printf("Error: Number out of range");
+        exit(1);
     }
 
-    char *binary = malloc(4);
-    // Printing array in reverse order.
-    for (int j = i - 1; j >= 0; j--)
+    char *binaryString = (char *)malloc(4); // 3 bits + null terminator
+
+    if (binaryString == NULL)
     {
-        // printf("%d\n", binaryNum[j]);
-        char bit = binaryNum[j] + '0';
-        // printf("Bit singolo: %c\n", bit);
-        strncat(binary, &bit, 1);
+        printf("Error: Memory allocation failed");
+        exit(1);
     }
 
-    // printf("Provola: %s\n", binary);
+    for (int i = 2; i >= 0; i--)
+    {
+        binaryString[i] = (num & 1) + '0'; // Convert the least significant bit to a character
+        num >>= 1;                         // Right-shift to process the next bit
+    }
 
-    return binary;
+    binaryString[3] = '\0'; // Null-terminate the string
+    return binaryString;
 }
