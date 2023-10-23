@@ -208,3 +208,49 @@ char *intToBinary3Bits(int num)
     binaryString[3] = '\0'; // Termina la stringa con il terminatore nullo
     return binaryString;
 }
+/*
+```
+for (int i = 2; i >= 0; i--)
+{
+    binaryString[i] = (num & 1) + '0';
+    num >>= 1;
+}
+```
+
+Questo pezzo di codice è utilizzato per convertire un numero intero `num` in una
+rappresentazione binaria di 3 bit in una stringa `binaryString`.
+Ecco una spiegazione dettagliata di come funziona:
+
+1. `for (int i = 2; i >= 0; i--)`: Questo è un ciclo `for` che inizia con `i`
+    uguale a 2 e si ripete finché `i` è maggiore o uguale a 0.
+    Questo ciclo viene eseguito tre volte per convertire i tre bit del numero intero
+    in una stringa binaria a 3 bit.
+
+2. `binaryString[i] = (num & 1) + '0';`: In questa riga, il bit meno significativo
+   di `num` (cioè il bit più a destra) viene estratto utilizzando un'operazione di
+   bitwise AND con il valore 1. Questo restituirà 1 se il bit è impostato (1) o 0
+   se è (0). Questo valore binario (0 o 1) viene quindi convertito in un carattere
+   '0' o '1' aggiungendo il valore ASCII di '0'. Quindi, se il bit è 1,
+   `binaryString[i]` diventerà '1', altrimenti diventerà '0'.
+
+3. `num >>= 1;`: In questa riga, il numero intero `num` viene spostato a destra di
+   un bit utilizzando l'operatore di shift (`>>`). Questo spostamento fa sì che il
+   bit successivo diventi il nuovo bit meno significativo e il processo può essere
+   ripetuto nel ciclo successivo per convertire il bit successivo.
+
+Esempio:
+Supponiamo che `num` sia inizializzato a 5. In binario, 5 è rappresentato come "101".
+Quindi, quando il ciclo `for` viene eseguito, avrai:
+
+- Iterazione 1 (i = 2): `(num & 1)` estrae il bit meno significativo (1) e lo converte
+  in '1'. `num >>= 1` sposta il numero a destra, diventando "10".
+
+- Iterazione 2 (i = 1): `(num & 1)` estrae il nuovo bit meno significativo (0) e lo
+  converte in '0'. `num >>= 1` sposta il numero a destra, diventando "1".
+
+- Iterazione 3 (i = 0): `(num & 1)` estrae l'ultimo bit (1) e lo converte in '1'.
+  `num >>= 1` sposta il numero a destra, diventando "0".
+
+Alla fine del ciclo, `binaryString` conterrà la rappresentazione binaria a 3 bit
+di 5, che è "101".
+*/
