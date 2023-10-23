@@ -114,6 +114,11 @@ int strToNum(char *permissions)
 char *numToStr(char *binary)
 {
     char *result = malloc(4);
+    if (result == NULL)
+    {
+        printf("Error: Memory allocation failed");
+        exit(1);
+    }
 
     char trattino = '-';
     char r = 'r';
@@ -153,6 +158,12 @@ int chmodStringToNumber(char *value)
     int numEveryone = strToNum(everyone);
 
     char *result = malloc(4);
+    if (result == NULL)
+    {
+        printf("Error: Memory allocation failed");
+        exit(1);
+    }
+
     sprintf(result, "%d%d%d", numOwner, numGroup, numEveryone);
 
     printf("%s\n", result);
@@ -173,6 +184,12 @@ int chmodNumberToString(char *value)
     char *stringEveryone = intToBinary3Bits(everyone - '0');
 
     char *result = malloc(10); // 9 (rwxr-xr-x) + 1 (terminatore nullo)
+    if (result == NULL)
+    {
+        printf("Error: Memory allocation failed");
+        exit(1);
+    }
+
     sprintf(result, "%s%s%s",
             numToStr(stringOwner), numToStr(stringGroup), numToStr(stringEveryone));
 
